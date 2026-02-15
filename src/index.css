@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'Blockletter';
+  src: url('/Blockletter.otf') format('opentype');
+}
+
+body {
+  margin: 0;
+  font-family: 'Bebas Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.Blockletter {
+  font-family: 'Blockletter', sans-serif;
+}
+
+
