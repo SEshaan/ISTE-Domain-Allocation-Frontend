@@ -1,14 +1,34 @@
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { logout } from "../../features/authSlice";
+import { resetDomainState } from "../../features/domainSlice";
+import { resetQuestionState } from "../../features/questionSlice";
+import { resetTaskState } from "../../features/taskSlice";
+import { persistor } from "../../app/store";
 import Header from "../../components/header";
+import Loader from "../../components/loader";
 
 type TileStatus = "available" | "locked" | "complete";
 
 export default function Dashboard() {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector(state => state.auth);
+    const { status } = useAppSelector(state => state.domain);
+    const { selectedDomains } = useAppSelector(state => state.domain);
 
-    // TEMP flags (Redux later)
-    const profileCompleted = true;
-    const domainSelected = true;
+    // Check if all required profile fields are filled
+    const profileCompleted = !!(
+        user?.name && user.name.trim() &&
+        user?.email && user.email.trim() &&
+        user?.regNo && user.regNo.trim() &&
+        user?.branch && user.branch.trim() &&
+        user?.githubLink && user.githubLink.trim() &&
+        user?.leetcodeLink && user.leetcodeLink.trim()
+    );
+
+    // Check if exactly 2 domains are selected
+    const domainSelected = selectedDomains.length === 2;
     const tasksCompleted = false;
     const finalSubmitted = false;
 
@@ -16,11 +36,31 @@ export default function Dashboard() {
         navigate(path);
     }
 
+    function handleLogout() {
+        dispatch(logout());
+        dispatch(resetDomainState());
+        dispatch(resetQuestionState());
+        dispatch(resetTaskState());
+        persistor.purge();
+        navigate('/login');
+    }
+
     return (
         <div className="min-h-screen bg-black text-white pb-8 md:pb-16">
+            { status === 'loading' && <Loader /> }
             <Header title="Dashboard" theme="dark" />
 
             <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* LOGOUT BUTTON */}
+                <div className="flex justify-end mb-8">
+                    <button
+                        onClick={handleLogout}
+                        className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition"
+                    >
+                        LOGOUT
+                    </button>
+                </div>
+
                 {/* GRID */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -48,7 +88,7 @@ export default function Dashboard() {
                                     : "available"
                                 : "locked" : "locked"
                         }
-                        onClick={() => handleRedirect("/tasks")}
+                        onClick={() => handleRedirect("/questionsandtasks")}
                     />
 
                     <BigTile

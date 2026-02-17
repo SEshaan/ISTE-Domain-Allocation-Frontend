@@ -1,13 +1,16 @@
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   toggleDraftDomain,
   resetDraft,
   setSelectedDomains,
+  applyDomains
 } from '../../features/domainSlice';
-import { getDomainColor, getReadableTextColor } from '../../utils/domainUI';
-import { updateProfile } from '../../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header';
+import Loader from '../../components/loader';
+import Popup from '../../components/Popup';
+import { getReadableTextColor } from '../../utils/color';
 
 function arraysEqual(a: string[], b: string[]) {
   if (a.length !== b.length) return false;
@@ -16,36 +19,44 @@ function arraysEqual(a: string[], b: string[]) {
   return sortedA.every((val, i) => val === sortedB[i]);
 }
 
-export default function EditDomains() {
+export default function DomainSelection() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { domainList, draftDomains, selectedDomains } =
+  const { domainList, draftDomains, selectedDomains, status } =
     useAppSelector(state => state.domain);
+  const { user } = useAppSelector(state => state.auth);
+  const [isConfirmPopupVisible, setConfirmPopupVisible] = useState(false);
+
+  useEffect(() => {
+    if (user && domainList.length > 0) {
+      const userDomains = domainList.filter(d => user.selectedDomainIds.includes(d._id));
+      const currentIds = selectedDomains.map(d => d._id).sort().join(',');
+      const userIds = userDomains.map(d => d._id).sort().join(',');
+
+      if (currentIds !== userIds) {
+        dispatch(setSelectedDomains(userDomains));
+      }
+    }
+  }, [user, domainList, selectedDomains, dispatch]);
 
   const hasChanges = !arraysEqual(
-    draftDomains.map(d => d.id),
-    selectedDomains.map(d => d.id)
+    draftDomains.map(d => d._id),
+    selectedDomains.map(d => d._id)
   );
 
-  const handleConfirm = async () => {
-    const confirmReset = window.confirm(
-      'Changing your domains will reset your previous progress. Do you want to continue?'
-    );
+  const handleSave = () => {
+  const draftIds = draftDomains.map(d => d._id);
 
-    if (!confirmReset) return;
+  dispatch(applyDomains(draftIds)) // <-- send all at once
+    .unwrap()
+    .then(() => {
+      dispatch(setSelectedDomains(draftDomains)); // sync local state
+      navigate(-1);
+    })
+    .catch(err => console.error(err));
+};
 
-    await dispatch(
-      updateProfile({
-        selectedDomainIds: draftDomains.map(d => d.id),
-      })
-    );
-
-    // sync selectedDomains with draft
-    dispatch(setSelectedDomains(draftDomains));
-
-    navigate('/dashboard');
-  };
 
   const renderSlot = (domain?: typeof draftDomains[0]) => {
     if (!domain) {
@@ -56,7 +67,7 @@ export default function EditDomains() {
       );
     }
 
-    const color = getDomainColor(domain.name);
+    const color = domain.color;
     const textColor = getReadableTextColor(color);
 
     return (
@@ -81,6 +92,7 @@ export default function EditDomains() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100">
+      {status === 'loading' && <Loader />}
       <Header title='Domains' theme='dark'/>
       <div className="max-w-6xl mx-auto space-y-12">
 
@@ -101,7 +113,7 @@ export default function EditDomains() {
         <div className="flex flex-col justify-center items-center pt-6 gap-8">
           <button
             disabled={!hasChanges}
-            onClick={handleConfirm}
+            onClick={() => setConfirmPopupVisible(true)}
             className={`px-10 py-4 rounded-xl font-extrabold tracking-wide transition
               ${
                 hasChanges
@@ -115,7 +127,7 @@ export default function EditDomains() {
           <button
             onClick={() => {
               dispatch(resetDraft());
-              navigate('/dashboard');
+              navigate(-1);
             }}
             className="text-zinc-400 hover:text-white"
           >
@@ -128,15 +140,15 @@ export default function EditDomains() {
         <div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-16">
             {domainList.map(domain => {
-              const active = draftDomains.some(d => d.id === domain.id);
+              const active = draftDomains.some(d => d._id === domain._id);
               const disabled = !active && draftDomains.length >= 2;
 
-              const color = getDomainColor(domain.name);
+              const color = domain.color;
               const textColor = getReadableTextColor(color);
 
               return (
                 <button
-                  key={domain.id}
+                  key={domain._id}
                   disabled={disabled}
                   onClick={() => dispatch(toggleDraftDomain(domain))}
                   style={
@@ -166,6 +178,14 @@ export default function EditDomains() {
         
 
       </div>
+      <Popup
+        visible={isConfirmPopupVisible}
+        theme="confirm"
+        title="Confirm Changes"
+        message="Changing your domains will reset your previous progress. Do you want to continue?"
+        onClose={() => setConfirmPopupVisible(false)}
+        onConfirm={handleSave}
+      />
     </div>
   );
 }

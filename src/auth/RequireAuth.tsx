@@ -1,10 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
-// TODO: Connect to Redux auth state or context
-// This component should check if JWT exists and is valid
+import { useAppSelector } from '../app/hooks';
 
 export default function RequireAuth() {
-  // Placeholder: Replace with actual auth check from Redux or context
-  const isAuthenticated = true; // TODO: Get from auth state
+  const auth = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = auth;
   
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;

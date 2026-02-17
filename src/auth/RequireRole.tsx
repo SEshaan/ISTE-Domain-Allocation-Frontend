@@ -1,3 +1,4 @@
+import { useAppSelector } from "../app/hooks";
 import { Navigate, Outlet } from 'react-router-dom';
 
 interface RequireRoleProps {
@@ -5,10 +6,7 @@ interface RequireRoleProps {
 }
 
 export default function RequireRole({ role }: RequireRoleProps) {
-  // TODO: Connect to Redux auth state to get user role
-  // This component should check if user has required role
-  
-  const userRole = 'ADMIN'; // TODO: Get from auth state
+  const {role: userRole} = useAppSelector(state => state.auth);
   
   if (userRole !== role) {
     return <Navigate to="/" replace />;

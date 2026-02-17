@@ -1,23 +1,81 @@
+
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../../firebase';
+import { loginSuccess } from '../../features/authSlice';
 
-function Login() {
+function AdminLogin() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // TODO: Implement OAuth login flow
-  useEffect(() => {
-    // Redirect to OAuth provider
-    // window.location.href = 'https://oauth-provider.com/auth?client_id=your-client-id';
-  }, [navigate]);
+  const loginWithGoogle = async () => {
+    try {
+      // 1️⃣ Firebase Login
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken();
+
+      // 2️⃣ Send token to backend admin login endpoint
+      const response = await fetch('http://localhost:3500/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+          'x-api-key': 'e854c681c0acc98dfb3a93686aeb9c3907198bddec47d88dc46c3a15856ff7b0',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Admin backend login failed');
+      }
+
+      const data = await response.json();
+      // 3️⃣ Dispatch to Redux with ADMIN role
+      dispatch(
+        loginSuccess({
+          user: {
+            id: data.user._id,
+            name: data.user.name,
+            email: data.user.email,
+            regNo: data.user.regNo,
+            branch: data.user.branch,
+            githubLink: data.user.githubLink || '',
+            leetcodeLink: data.user.leetcodeLink || '',
+            portfolioLink: data.user.portfolioLink || '',
+            selectedDomainIds: data.user.selectedDomainIds || [],
+          },
+          token: idToken,
+          role: 'ADMIN',
+          profileComplete: true, // or set as needed
+        })
+      );
+
+      // 4️⃣ Store token
+      localStorage.setItem('token', idToken);
+
+      // 5️⃣ Redirect to admin dashboard
+      navigate('/admin/dashboard');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Admin Login Error:', error);
+      alert('Admin login failed. Please try again or contact support.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Login with OAuth</h1>
-        <p className="mb-6">Redirecting to authentication provider...</p>
+        <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
+        <button
+          onClick={loginWithGoogle}
+          className="inline-block rounded-lg bg-primary px-8 py-3 font-medium text-black text-3xl transition hover:scale-105 hover:bg-white"
+        >
+          Login with Google (Admin)
+        </button>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default AdminLogin;

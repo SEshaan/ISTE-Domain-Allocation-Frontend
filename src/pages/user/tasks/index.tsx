@@ -1,11 +1,23 @@
-import { useAppSelector } from '../../../app/hooks';
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import { setSelectedDomains } from '../../../features/domainSlice';
 import Header from '../../../components/header';
 import { useNavigate } from 'react-router-dom';
-import { getDomainColor, getReadableTextColor } from '../../../utils/domainUI';
+import { getReadableTextColor } from '../../../utils/color';
 
 export default function QuestionsTasks() {
   const navigate = useNavigate();
-  const { selectedDomains } = useAppSelector((s) => s.domain);
+  const dispatch = useAppDispatch();
+  const { selectedDomains, domainList } = useAppSelector((s) => s.domain);
+  const { user } = useAppSelector((s) => s.auth);
+
+  // Ensure selectedDomains are synced with user profile on load
+  useEffect(() => {
+    if (user && domainList.length > 0 && selectedDomains.length === 0 && user.selectedDomainIds.length > 0) {
+      const userDomains = domainList.filter(d => user.selectedDomainIds.includes(d._id));
+      dispatch(setSelectedDomains(userDomains));
+    }
+  }, [user, domainList, selectedDomains.length, dispatch]);
 
   return (
     <div className="min-h-screen bg-black text-zinc-100">
@@ -13,11 +25,11 @@ export default function QuestionsTasks() {
 
       <div className="max-w-6xl mx-auto px-6 py-16 space-y-24">
         {selectedDomains.map((domain) => {
-          const color = getDomainColor(domain.name);
+          const color = domain.color;
           const textColor = getReadableTextColor(color);
 
           return (
-            <section key={domain.id} className="space-y-10">
+            <section key={domain._id} className="space-y-10">
 
               {/* DOMAIN TITLE BLOCK */}
               <div
@@ -37,7 +49,7 @@ export default function QuestionsTasks() {
 
                 {/* QUESTIONS CARD */}
                 <div
-                  onClick={() => navigate(`/questions?domain=${domain.id}`)}
+                  onClick={() => domain._id && navigate(`/question?domain=${domain._id}`)}
                   className="flex-1 bg-zinc-900 border border-zinc-700 rounded-2xl 
                              p-12 cursor-pointer transition 
                              hover:scale-[1.02] hover:border-white"
@@ -58,7 +70,7 @@ export default function QuestionsTasks() {
 
                 {/* TASKS CARD */}
                 <div
-                  onClick={() => navigate(`/tasks?domain=${domain.id}`)}
+                  onClick={() => domain._id && navigate(`/tasks?domain=${domain._id}`)}
                   className="flex-1 bg-zinc-900 border border-zinc-700 rounded-2xl 
                              p-12 cursor-pointer transition 
                              hover:scale-[1.02] hover:border-white"

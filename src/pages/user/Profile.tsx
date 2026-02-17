@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import Header from '../../components/header'
+import Popup from '../../components/Popup'
 import { updateProfile } from '../../features/authSlice'
-import { getDomainColor, getReadableTextColor } from '../../utils/domainUI';
+import Loader from '../../components/loader'
 import { useNavigate } from 'react-router-dom';
-
+import type { Domain } from '../../features/domainSlice';
+import { getReadableTextColor } from '../../utils/color';
 
 const GITHUB_REGEX =
   /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/;
@@ -30,11 +32,12 @@ type GithubData = {
 
 function Profile() {
   const dispatch = useAppDispatch()
-  const { user, profileComplete } = useAppSelector(state => state.auth)
+  const { user, profileComplete, status } = useAppSelector(state => state.auth) 
+  const { domainList } = useAppSelector(state => state.domain)
 
   const [githubData, setGithubData] = useState<GithubData | null>(null);
   const [githubLoading, setGithubLoading] = useState(false);
-  const [githubError, setGithubError] = useState<string | null>(null);
+  const [githubError, setGithubError] = useState<string | null>(null); // todo - handle errors better
 
   const navigate = useNavigate();
 
@@ -90,6 +93,13 @@ function Profile() {
     selectedDomainIds: [] as string[],
   })
 
+  const [popup, setPopup] = useState<{ visible: boolean; theme: 'info' | 'warning' | 'confirm'; message: string; onConfirm?: () => void; onClose?: () => void }>({
+    visible: false,
+    theme: 'info',
+    message: '',
+  });
+  const [missingFields, setMissingFields] = useState<string[]>([]);
+
   useEffect(() => {
     if (user) {
       console.log(user);
@@ -107,12 +117,57 @@ function Profile() {
     }
   }, [user])
 
-  const handleSave = () => {
-    dispatch(updateProfile(form))
+  const handleSave = async () => {
+    const missingKeys: string[] = [];
+    const missingLabels: string[] = [];
+
+    function mark(key: string, label: string) {
+      missingKeys.push(key);
+      missingLabels.push(label);
+    }
+
+    if (!form.name || !form.name.trim()) mark('name', 'Full Name');
+    if (!form.email || !form.email.trim()) mark('email', 'Email');
+    if (!form.regNo || !form.regNo.trim()) mark('regNo', 'Registration No');
+    if (!form.branch || !form.branch.trim()) mark('branch', 'Branch');
+    if (!form.githubLink || !form.githubLink.trim()) mark('githubLink', 'GitHub Profile');
+    if (!form.leetcodeLink || !form.leetcodeLink.trim()) mark('leetcodeLink', 'LeetCode Profile');
+
+    // validate URL formats (mark the field key so it highlights)
+    if (form.githubLink && !isValidGithub(form.githubLink)) mark('githubLink', 'Valid GitHub URL');
+    if (form.leetcodeLink && !isValidLeetcode(form.leetcodeLink)) mark('leetcodeLink', 'Valid LeetCode URL');
+
+    if (missingKeys.length > 0) {
+      setMissingFields(missingKeys);
+      setPopup({
+        visible: true,
+        theme: 'warning',
+        message: `Please fill/fix the following mandatory fields: ${[...new Set(missingLabels)].join(', ')}`,
+      });
+      return;
+    }
+
+    // clear any previous highlights and proceed
+    setMissingFields([]);
+    await dispatch(updateProfile(form));
+    setPopup({ visible: true, theme: 'info', message: 'Profile saved successfully.', onClose: () => navigate('/dashboard')}); 
   }
+
+  const getDomainDetails = (id: string): Domain => {
+    for (const domain of domainList) {
+      if (domain._id === id) {
+        return domain;
+      }
+    }
+    return { _id: '', name: '', color: '#000000', description: ''}; // fallback domain object
+  }
+
+
+  
 
   return (
     <div className="bg-primary min-h-screen text-zinc-100">
+      {status === 'loading' && <Loader />}
       <Header title="Profile" />
 
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
@@ -135,13 +190,17 @@ function Profile() {
               <div key={key} className="text-left">
                 <p className="text-zinc-400 text-lg mb-2">{label}</p>
                 <input
-                  className="w-full px-4 py-4 rounded-lg bg-zinc-900 border border-zinc-700
-                           placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white"
+                  className={`w-full px-4 py-4 rounded-lg bg-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white ${
+                    missingFields.includes(key as string)
+                      ? 'border-2 border-red-500 ring-2 ring-red-500'
+                      : 'border border-zinc-700'
+                  }`}
                   placeholder={label}
                   value={(form as any)[key]}
-                  onChange={e =>
-                    setForm({ ...form, [key]: e.target.value })
-                  }
+                  onChange={e => {
+                    setForm({ ...form, [key]: e.target.value });
+                    setMissingFields(prev => prev.filter(f => f !== (key as string)));
+                  }}
                 />
               </div>
             ))}
@@ -160,12 +219,16 @@ function Profile() {
               <div>
                 <h1 className='text-xl text-left mb-4'>Github Profile</h1>
                 <input
-                  className="w-full px-4 py-4 rounded-lg bg-zinc-900 border border-zinc-700
-                         placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white"
+                  className={`w-full px-4 py-4 rounded-lg bg-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white ${
+                    missingFields.includes('githubLink') ? 'border-2 border-red-500 ring-2 ring-red-500' : 'border border-zinc-700'
+                  }`}
                   placeholder="GitHub Profile URL"
                   value={form.githubLink}
                   onChange={e =>
-                    setForm({ ...form, githubLink: e.target.value })
+                    {
+                      setForm({ ...form, githubLink: e.target.value });
+                      setMissingFields(prev => prev.filter(f => f !== 'githubLink'));
+                    }
                   }
                   onBlur={() => fetchGithubPreview(form.githubLink)}
                 />
@@ -173,12 +236,16 @@ function Profile() {
               <div>
                 <h1 className='text-xl text-left mb-4'>Leetcode Profile</h1>
                 <input
-                  className="w-full px-4 py-4 rounded-lg bg-zinc-900 border border-zinc-700
-                         placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white"
+                  className={`w-full px-4 py-4 rounded-lg bg-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white ${
+                    missingFields.includes('leetcodeLink') ? 'border-2 border-red-500 ring-2 ring-red-500' : 'border border-zinc-700'
+                  }`}
                   placeholder="LeetCode Profile URL"
                   value={form.leetcodeLink}
                   onChange={e =>
-                    setForm({ ...form, leetcodeLink: e.target.value })
+                    {
+                      setForm({ ...form, leetcodeLink: e.target.value });
+                      setMissingFields(prev => prev.filter(f => f !== 'leetcodeLink'));
+                    }
                   }
                 />
               </div>
@@ -251,7 +318,8 @@ function Profile() {
         </section>
 
         {/* ================= DOMAINS ================= */}
-        <section className="bg-black border border-zinc-700 rounded-2xl p-12">
+        {
+          profileComplete ? <section className="bg-black border border-zinc-700 rounded-2xl p-12">
           <h2 className="text-5xl text-left font-extrabold tracking-widest text-zinc-300 mb-12">
             DOMAINS
           </h2>
@@ -263,23 +331,21 @@ function Profile() {
           ) : (
             <div className="flex flex-wrap justify-evenly">
               {form.selectedDomainIds.map(id => {
-                const color = getDomainColor(id);
-
-                const textColor = getReadableTextColor(color);
-                console.log(color, textColor, id);
+                const domain = getDomainDetails(id);
+                const textColor = getReadableTextColor(domain.color);
 
                 return (
                   <div
                     key={id}
                     className="w-40 h-40 md:w-80 md:h-80 rounded-2xl
                        flex items-center justify-center text-center font-bold"
-                    style={{ background: color }}
+                    style={{ background: domain.color }}
                   >
                     <span
                       className="px-4 text-2xl md:text-4xl"
                       style={{ color: textColor }}
                     >
-                      {id.toUpperCase()}
+                      {domain.name}
                     </span>
                   </div>
                 );
@@ -287,6 +353,9 @@ function Profile() {
             </div>
           )}
         </section>
+        :
+        null
+        }
 
         {/* SAVE */}
         <div className="flex justify-end">
@@ -308,6 +377,15 @@ function Profile() {
           </button>
         </div>
       </div>
+
+      <Popup
+        visible={popup.visible}
+        theme={popup.theme}
+        message={popup.message}
+        onClose={() => {setPopup({ ...popup, visible: false, }); popup.onClose && popup.onClose();}}
+        onConfirm={popup.onConfirm}
+      />
+
     </div>
   )
 

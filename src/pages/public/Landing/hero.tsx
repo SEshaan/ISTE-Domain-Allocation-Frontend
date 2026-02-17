@@ -5,6 +5,7 @@ import Marquee from "../../../components/marquee";
 import Title from "../../../components/title";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../../features/authSlice";
+import { fetchDomains } from "../../../features/domainSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
@@ -57,6 +58,8 @@ export default function Hero() {
             data.user.portfolioLink,
         })
       );
+      // @ts-ignore
+      dispatch(fetchDomains());
 
       // 4️⃣ Optional: store token
       localStorage.setItem("token", idToken);
