@@ -200,7 +200,7 @@ const questionSlice = createSlice({
       })
 
       /* ===== SUBMIT RESPONSE ===== */
-      .addCase(submitResponse.pending, (state) => {
+      .addCase(submitResponse.pending, () => {
         // silent autosave — no global loading
       })
       .addCase(submitResponse.fulfilled, (state, action) => {
@@ -229,7 +229,7 @@ const questionSlice = createSlice({
       })
 
       /* ===== UPDATE RESPONSE ===== */
-      .addCase(updateResponse.pending, (state) => {
+      .addCase(updateResponse.pending, () => {
         // silent autosave — no global loading
       })
       .addCase(updateResponse.fulfilled, (state, action) => {

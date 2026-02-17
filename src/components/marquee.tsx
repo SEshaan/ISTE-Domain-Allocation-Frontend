@@ -1,4 +1,4 @@
-import React from "react";
+
 
 const Marquee = ({ reversed = false }: { reversed?: boolean }) => {
     const text = "Indian Society For Technical Education";

@@ -39,6 +39,8 @@ function Profile() {
   const [githubLoading, setGithubLoading] = useState(false);
   const [githubError, setGithubError] = useState<string | null>(null); // todo - handle errors better
 
+  githubError && githubLoading
+
   const navigate = useNavigate();
 
 
