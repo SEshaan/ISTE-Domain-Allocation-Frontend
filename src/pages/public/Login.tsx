@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../firebase';
 import { loginSuccess } from '../../features/authSlice';
+import api from '../../utils/api';
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -17,20 +18,17 @@ function AdminLogin() {
       const idToken = await firebaseUser.getIdToken();
 
       // 2️⃣ Send token to backend admin login endpoint
-      const response = await fetch('http://localhost:3500/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${idToken}`,
-          'x-api-key': 'e854c681c0acc98dfb3a93686aeb9c3907198bddec47d88dc46c3a15856ff7b0',
-        },
-      });
+        const response = await api.post('/admin/login', {}, {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
 
-      if (!response.ok) {
+      if (response.status !== 200 || !response.data || !response.data.user) {
         throw new Error('Admin backend login failed');
       }
 
-      const data = await response.json();
+        const data = response.data;
       // 3️⃣ Dispatch to Redux with ADMIN role
       dispatch(
         loginSuccess({

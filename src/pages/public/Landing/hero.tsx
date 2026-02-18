@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../../features/authSlice";
 import { fetchDomains } from "../../../features/domainSlice";
 import { useNavigate } from "react-router-dom";
+import api from "../../../utils/api";
 
 export default function Hero() {
   const dispatch = useDispatch();
@@ -19,21 +20,17 @@ export default function Hero() {
       const firebaseUser = result.user;
       const idToken = await firebaseUser.getIdToken();
 
-      // 2️⃣ Send token to backend
-      const response = await fetch("http://localhost:3500/user/login", {
-        method: "POST",
+      // 2️⃣ Send token to backend using api instance
+      const response = await api.post("/user/login", {}, {
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${idToken}`,
-          'x-api-key' : "e854c681c0acc98dfb3a93686aeb9c3907198bddec47d88dc46c3a15856ff7b0"
         },
       });
 
-      if (!response.ok) {
+      const data = response.data;
+      if (!data || !data.user) {
         throw new Error("Backend login failed");
       }
-
-      const data = await response.json();
       console.log(data.user);
 
       // 3️⃣ Dispatch to Redux
