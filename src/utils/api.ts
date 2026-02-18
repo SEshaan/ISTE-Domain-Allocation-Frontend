@@ -16,7 +16,7 @@ api.interceptors.request.use(
     config.headers['x-api-key'] = 'e854c681c0acc98dfb3a93686aeb9c3907198bddec47d88dc46c3a15856ff7b0';
     // Attach token from localStorage if available
     const token = localStorage.getItem('token');
-    if (token && window.location.pathname !== '/admin/login') {
+    if (token && window.location.pathname !== '/adminLogin') {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;

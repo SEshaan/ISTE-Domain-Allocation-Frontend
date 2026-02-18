@@ -53,9 +53,9 @@ export default function AdminSubmissions() {
                         {submissions.length > 0 ? (
                             submissions.map((submission) => (
                                 <tr key={submission._id} className="border-b hover:bg-gray-50">
-                                    <td className="p-3">{submission.userId.name}</td>
-                                    <td className="p-3">{submission.userId.regNo}</td>
-                                    <td className="p-3">{submission.taskId.title}</td>
+                                    <td className="p-3">{submission.userId ? submission.userId.name : <span className="text-gray-400 italic">Unknown</span>}</td>
+                                    <td className="p-3">{submission.userId ? submission.userId.regNo : <span className="text-gray-400 italic">-</span>}</td>
+                                    <td className="p-3">{submission.taskId ? submission.taskId.title : <span className="text-gray-400 italic">Unknown</span>}</td>
                                     <td className="p-3">{new Date(submission.submittedAt).toLocaleString()}</td>
                                     <td className="p-3">
                                         <a href={submission.githubLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mr-3">

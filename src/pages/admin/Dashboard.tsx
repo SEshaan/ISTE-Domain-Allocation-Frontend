@@ -1,7 +1,7 @@
 import AdminDomains from ".";
 import AdminInterviews from "./interview";
 import AdminQuestionnaire from "./Questions";
-import AdminResponses from "./Responses";
+// import AdminResponses from "./Responses";
 import AdminSubmissions from "./Submissions";
 import AdminTasks from "./Tasks";
 import AdminUsers from "./Users";
@@ -14,7 +14,7 @@ export default function Dashboard() {
       <AdminUsers />
       <AdminInterviews />
       <AdminQuestionnaire />
-      <AdminResponses />
+      {/* <AdminResponses /> */}
       <AdminTasks />
       <AdminSubmissions />
       <AdminWhitelistedUsers />
