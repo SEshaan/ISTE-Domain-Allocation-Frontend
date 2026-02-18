@@ -20,7 +20,7 @@ function AppRoutes() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
-        <Route path="/admin/login" element={<Login />} />
+        <Route path="/adminLogin" element={<Login />} />
         
         {/* Protected User Routes */}
         <Route element={<RequireAuth />}>
