@@ -17,16 +17,16 @@ const LEETCODE_REGEX =
 const isValidGithub = (url: string) => GITHUB_REGEX.test(url);
 const isValidLeetcode = (url: string) => LEETCODE_REGEX.test(url);
 
-const extractUsername = (url: string) =>
-  url.split('/').filter(Boolean).pop();
+// const extractUsername = (url: string) =>
+//   url.split('/').filter(Boolean).pop();
 
-type GithubData = {
-  login: string;
-  avatar_url: string;
-  name: string;
-  public_repos: number;
-  html_url: string;
-};
+// type GithubData = {
+//   login: string;
+//   avatar_url: string;
+//   name: string;
+//   public_repos: number;
+//   html_url: string;
+// };
 
 
 
@@ -35,50 +35,50 @@ function Profile() {
   const { user, profileComplete, status } = useAppSelector(state => state.auth) 
   const { domainList } = useAppSelector(state => state.domain)
 
-  const [githubData, setGithubData] = useState<GithubData | null>(null);
-  const [githubLoading, setGithubLoading] = useState(false);
-  const [githubError, setGithubError] = useState<string | null>(null); // todo - handle errors better
+  // const [githubData, setGithubData] = useState<GithubData | null>(null);
+  // const [githubLoading, setGithubLoading] = useState(false);
+  // const [githubError, setGithubError] = useState<string | null>(null); // todo - handle errors better
 
-  githubError && githubLoading
+  // githubError && githubLoading
 
   const navigate = useNavigate();
 
 
-  const fetchGithubPreview = async (url: string) => {
-    if (!url) {
-      setGithubData(null);
-      setGithubError(null);
-      return;
-    }
+  // const fetchGithubPreview = async (url: string) => {
+  //   if (!url) {
+  //     setGithubData(null);
+  //     setGithubError(null);
+  //     return;
+  //   }
 
-    if (!isValidGithub(url)) {
-      setGithubData(null);
-      setGithubError("Invalid GitHub URL");
-      return;
-    }
+  //   if (!isValidGithub(url)) {
+  //     setGithubData(null);
+  //     setGithubError("Invalid GitHub URL");
+  //     return;
+  //   }
 
-    const username = extractUsername(url);
-    if (!username) return;
+  //   const username = extractUsername(url);
+  //   if (!username) return;
 
-    try {
-      setGithubLoading(true);
-      setGithubError(null);
+  //   try {
+  //     setGithubLoading(true);
+  //     setGithubError(null);
 
-      const res = await fetch(`https://api.github.com/users/${username}`);
+  //     const res = await fetch(`https://api.github.com/users/${username}`);
 
-      if (!res.ok) {
-        throw new Error("GitHub user not found");
-      }
+  //     if (!res.ok) {
+  //       throw new Error("GitHub user not found");
+  //     }
 
-      const data = await res.json();
-      setGithubData(data);
-    } catch (err: any) {
-      setGithubData(null);
-      setGithubError(err.message || "Something went wrong");
-    } finally {
-      setGithubLoading(false);
-    }
-  };
+  //     const data = await res.json();
+  //     setGithubData(data);
+  //   } catch (err: any) {
+  //     setGithubData(null);
+  //     setGithubError(err.message || "Something went wrong");
+  //   } finally {
+  //     setGithubLoading(false);
+  //   }
+  // };
 
 
 
@@ -215,9 +215,9 @@ function Profile() {
             PROFILES
           </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="gap-8">
             {/* INPUTS */}
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <h1 className='text-xl text-left mb-4'>Github Profile</h1>
                 <input
@@ -232,7 +232,6 @@ function Profile() {
                       setMissingFields(prev => prev.filter(f => f !== 'githubLink'));
                     }
                   }
-                  onBlur={() => fetchGithubPreview(form.githubLink)}
                 />
               </div>
               <div>
@@ -251,7 +250,7 @@ function Profile() {
                   }
                 />
               </div>
-              <div>
+              {/* <div>
                 <h1 className='text-xl text-left mb-4'>Portfolio Website</h1>
                 <input
                   className="w-full px-4 py-4 rounded-lg bg-zinc-900 border border-zinc-700
@@ -263,12 +262,12 @@ function Profile() {
                   }
 
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* PREVIEWS */}
-            <div className="grid grid-cols-1 h-full gap-4">
-              {/* GITHUB */}
+            {/* <div className="grid grid-cols-1 h-full gap-4">
+              
               {githubData ? (
                 <a
                   href={githubData.html_url}
@@ -315,7 +314,7 @@ function Profile() {
                   Enter a valid GitHub profile URL
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
         </section>
 
