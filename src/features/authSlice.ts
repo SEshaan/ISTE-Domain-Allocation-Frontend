@@ -22,6 +22,7 @@ interface AuthState {
   role: 'USER' | 'ADMIN' | null;
   isAuthenticated: boolean;
   profileComplete: boolean;
+  interviewScheduled: boolean; // 👈 NEW
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -32,9 +33,32 @@ const initialState: AuthState = {
   role: null,
   isAuthenticated: false,
   profileComplete: false,
+  interviewScheduled: false, // 👈 NEW
   status: 'idle',
   error: null,
 };
+// Thunk to check if user has any interviews
+export const getUserInterviews = createAsyncThunk<
+  boolean,
+  void
+>(
+  'auth/getUserInterviews',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const token = (getState() as any).auth?.token;
+      const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+
+      const response = await api.get('/interview', { headers });
+      const interviews = response.data.data;
+      return interviews && interviews.length > 0;
+    } catch (error: any) {
+      if (error.response) {
+        return rejectWithValue(error.response.data);
+      }
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 export const updateProfile = createAsyncThunk<User, Partial<User>>(
   'auth/updateProfile',
@@ -74,6 +98,7 @@ const authSlice = createSlice({
       state.role = null;
       state.isAuthenticated = false;
       state.profileComplete = false;
+      state.interviewScheduled = false; // 👈 RESET
     },
     updateDomains: (state, action: PayloadAction<string[]>) => {
       if (!state.user) return;
@@ -101,6 +126,14 @@ const authSlice = createSlice({
     });
     builder.addCase(applyDomains.fulfilled, (state, action) => {
       state.user = action.payload;
+    });
+
+    // Interview scheduled state
+    builder.addCase(getUserInterviews.fulfilled, (state, action) => {
+      state.interviewScheduled = action.payload;
+    });
+    builder.addCase(getUserInterviews.rejected, (state) => {
+      state.interviewScheduled = false;
     });
   },
 });

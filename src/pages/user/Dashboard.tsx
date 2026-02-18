@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { logout } from "../../features/authSlice";
@@ -7,13 +8,14 @@ import { resetTaskState } from "../../features/taskSlice";
 import { persistor } from "../../app/store";
 import Header from "../../components/header";
 import Loader from "../../components/loader";
+import api from "../../utils/api";
 
 type TileStatus = "available" | "locked" | "complete";
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const { user } = useAppSelector(state => state.auth);
+    const { user, interviewScheduled } = useAppSelector(state => state.auth);
     const { status } = useAppSelector(state => state.domain);
     const { selectedDomains } = useAppSelector(state => state.domain);
 
@@ -32,9 +34,24 @@ export default function Dashboard() {
     const tasksCompleted = false;
     const finalSubmitted = false;
 
+    const [showInterviewPopup, setShowInterviewPopup] = useState(false);
+    const [interview, setInterview] = useState<any>(null);
+
     function handleRedirect(path: string) {
         navigate(path);
     }
+
+    const handleInterviewClick = async () => {
+        setShowInterviewPopup(true);
+        try {
+            const res = await api.get('/interview');
+            if (res.data.data && res.data.data.length > 0) {
+                setInterview(res.data.data[0]);
+            }
+        } catch (err) {
+            console.error("Failed to fetch interview details", err);
+        }
+    };
 
     function handleLogout() {
         dispatch(logout());
@@ -92,17 +109,76 @@ export default function Dashboard() {
                     />
 
                     <BigTile
-                        title="FINAL SUBMISSION"
-                        subtitle="Review and submit your application"
-                        status={
-                            profileCompleted && domainSelected && tasksCompleted
-                                ?  finalSubmitted ? "complete" : "available"
-                                : "locked"
-                        }
-                        onClick={() => handleRedirect("/final")}
+                        title="INTERVIEW"
+                        subtitle="View your scheduled interview details"
+                        status={interviewScheduled ? "available" : "locked"}
+                        onClick={handleInterviewClick}
                     />
                 </div>
             </div>
+
+            {/* Interview Popup */}
+            {showInterviewPopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-8 max-w-2xl w-full relative flex flex-col gap-6">
+                        <button
+                            onClick={() => setShowInterviewPopup(false)}
+                            className="absolute top-4 right-4 text-zinc-400 hover:text-white transition"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        </button>
+
+                        <h2 className="text-3xl font-bold tracking-wide text-center mb-2">INTERVIEW DETAILS</h2>
+
+                        {interview ? (
+                            <>
+                                <div className="space-y-4 text-lg text-zinc-300">
+                                    <div className="flex flex-col md:flex-row justify-between p-4 bg-black/40 rounded-xl border border-zinc-800">
+                                        <span className="text-zinc-500 font-bold uppercase text-sm tracking-wider">Date & Time</span>
+                                        <span className="font-mono text-white">
+                                            {new Date(interview.datetime).toLocaleString([], { dateStyle: 'full', timeStyle: 'short' })}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="flex flex-col md:flex-row justify-between p-4 bg-black/40 rounded-xl border border-zinc-800">
+                                        <span className="text-zinc-500 font-bold uppercase text-sm tracking-wider">Duration</span>
+                                        <span className="font-mono text-white">{interview.durationMinutes} Minutes</span>
+                                    </div>
+
+                                    {interview.domainId && (
+                                        <div className="flex flex-col md:flex-row justify-between p-4 bg-black/40 rounded-xl border border-zinc-800">
+                                            <span className="text-zinc-500 font-bold uppercase text-sm tracking-wider">Domain</span>
+                                            <span className="font-bold text-white">{interview.domainId.name || "Unknown"}</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <a 
+                                    href={interview.meetLink} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="group relative w-full aspect-video bg-zinc-800 rounded-xl border-2 border-zinc-700 hover:border-blue-500 hover:bg-zinc-800/80 transition-all flex flex-col items-center justify-center gap-4 overflow-hidden"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    
+                                    <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M15 10l5-5v14l-5-5"></path><rect x="2" y="6" width="13" height="12" rx="2"></rect></svg>
+                                    </div>
+                                    
+                                    <div className="text-center z-10">
+                                        <h3 className="text-xl font-bold text-white mb-1">Join Google Meet</h3>
+                                        <p className="text-zinc-400 text-sm">{interview.meetLink}</p>
+                                    </div>
+                                </a>
+                            </>
+                        ) : (
+                            <div className="flex justify-center py-12">
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

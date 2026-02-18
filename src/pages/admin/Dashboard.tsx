@@ -9,8 +9,8 @@ export default function Dashboard() {
     <div className="p-6">
       <AdminDomains />
       <AdminUsers />
-      <AdminQuestionnaire />
       <AdminInterviews/>
+      <AdminQuestionnaire />
       <AdminWhitelistedUsers />
     </div>
   );
