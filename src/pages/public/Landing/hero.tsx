@@ -9,12 +9,15 @@ import { fetchDomains } from "../../../features/domainSlice";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState } from "react";
+import Popup from "../../../components/Popup";
+
 
 export default function Hero() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [count, setCount] = useState(0);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const loginWithGoogle = async () => {
     try {
@@ -68,7 +71,13 @@ export default function Hero() {
       navigate("/dashboard");
 
     } catch (error) {
-      console.error("Login Error:", error);
+      // Check for 403 error
+      if (error && typeof error === "object" &&
+        (error as any).response && (error as any).response.status === 403) {
+        setPopupVisible(true);
+      } else {
+        console.error("Login Error:", error);
+      }
     }
   };
 
@@ -78,7 +87,7 @@ export default function Hero() {
       navigate("/adminLogin");
       setCount(0); // reset count after showing alert
     }
-  }
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -119,6 +128,14 @@ export default function Hero() {
 
         <Marquee reversed />
       </div>
+
+      <Popup
+        visible={popupVisible}
+        theme="warning"
+        title="Not Enrolled"
+        message="You are not enrolled for this chapter. Please reach out to us at <email> if this is a mistake."
+        onClose={() => setPopupVisible(false)}
+      />
     </div>
   );
 }
