@@ -8,10 +8,13 @@ import { loginSuccess } from "../../../features/authSlice";
 import { fetchDomains } from "../../../features/domainSlice";
 import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
+import { useState } from "react";
 
 export default function Hero() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [count, setCount] = useState(0);
 
   const loginWithGoogle = async () => {
     try {
@@ -69,6 +72,13 @@ export default function Hero() {
     }
   };
 
+  const updateCount = () => {
+    setCount((prev) => prev + 1);
+    if (count >= 5) {
+      navigate("/adminLogin");
+      setCount(0); // reset count after showing alert
+    }
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -83,7 +93,7 @@ export default function Hero() {
               Domain
             </Title>
             <Title className='text-[20vmin] md:text-[25vmin]'>
-              Allocation
+              Alloc<span onClick={updateCount}>a</span>tion
             </Title>
           </div>
 
