@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../../utils/api";
 import { useState } from "react";
 import Popup from "../../../components/Popup";
+import Loader from "../../../components/loader";
 
 
 export default function Hero() {
@@ -18,8 +19,10 @@ export default function Hero() {
 
   const [count, setCount] = useState(0);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const loginWithGoogle = async () => {
+    setLoading(true);
     try {
       // 1️⃣ Firebase Login
       const result = await signInWithPopup(auth, provider);
@@ -78,6 +81,8 @@ export default function Hero() {
       } else {
         console.error("Login Error:", error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +97,12 @@ export default function Hero() {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <ImageBackground />
+
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <Loader />
+        </div>
+      )}
 
       <div className="z-10 flex h-screen w-full flex-col items-center justify-between px-6 text-center">
         <Marquee />
@@ -121,9 +132,11 @@ export default function Hero() {
               hover:scale-105
               hover:bg-white
             "
+            disabled={loading}
           >
-            Login with Google
+            {loading ? "Logging in..." : "Login with Google"}
           </button>
+            
         </div>
 
         <Marquee reversed />
