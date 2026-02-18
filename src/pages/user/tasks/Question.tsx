@@ -206,8 +206,14 @@ questionnaireId: questionnaire._id,
 
   if (!domainId) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center flex-col gap-4">
         <p>No domain specified.</p>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
@@ -226,22 +232,41 @@ questionnaireId: questionnaire._id,
         >
           Retry
         </button>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
 
   if (!questionnaire) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center flex-col gap-4">
+        
         <p>questionnaire not found.</p>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
 
   if (!currentQuestion) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center flex-col gap-4">
         <p>No questions available.</p>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
@@ -336,6 +361,13 @@ questionnaireId: questionnaire._id,
           {/* Footer */}
           <div className="mt-10 pt-8 border-t border-zinc-900 flex items-center justify-between">
             <button
+              onClick={() => navigate('/questionsandtasks')}
+              className="px-6 py-3 rounded-lg font-medium transition-colors text-zinc-400 hover:text-white hover:bg-zinc-900"
+            >
+              Back
+            </button>
+            <div className='flex gap-4'>
+              <button
               onClick={handlePrev}
               disabled={currentQuestionIndex === 0}
               className={`px-6 py-3 rounded-lg font-medium transition-colors ${
@@ -363,6 +395,7 @@ questionnaireId: questionnaire._id,
                 Next
               </button>
             )}
+            </div>
           </div>
         </div>
       </div>

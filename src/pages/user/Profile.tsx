@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import BackButton from '../../components/BackButton'
 import Header from '../../components/header'
 import Popup from '../../components/Popup'
 import { updateProfile } from '../../features/authSlice'
@@ -173,8 +174,7 @@ function Profile() {
       <Header title="Profile" />
 
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-
-
+        <BackButton to="/dashboard" text="Dashboard" theme='light'/>
 
         {/* ================= DETAILS ================= */}
         <section className="bg-black border border-zinc-700 rounded-2xl p-12">
@@ -360,14 +360,6 @@ function Profile() {
 
         {/* SAVE */}
         <div className="flex justify-end">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-14 py-4 rounded-xl text-black
-                     font-extrabold tracking-widest
-                     hover:scale-[1.02] transition ml-4"
-          >
-            CANCEL
-          </button>
           <button
             onClick={handleSave}
             className="px-14 py-4 rounded-xl bg-black text-white

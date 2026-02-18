@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
+import BackButton from '../../../components/BackButton';
 import { setSelectedDomains } from '../../../features/domainSlice';
 import Header from '../../../components/header';
 import { useNavigate } from 'react-router-dom';
@@ -22,8 +23,9 @@ export default function QuestionsTasks() {
   return (
     <div className="min-h-screen bg-black text-zinc-100">
       <Header title="Tasks" theme="dark" />
-
-      <div className="max-w-6xl mx-auto px-6 py-16 space-y-24">
+      
+      <div className="max-w-6xl mx-auto px-6 py-12 space-y-16">
+        <BackButton to="/dashboard" text="Dashboard" />
         {selectedDomains.map((domain) => {
           const color = domain.color;
           const textColor = getReadableTextColor(color);
@@ -43,6 +45,8 @@ export default function QuestionsTasks() {
                   {domain.name.toUpperCase()}
                 </h2>
               </div>
+
+              
 
               {/* CARDS */}
               <div className="flex flex-col md:flex-row gap-8">

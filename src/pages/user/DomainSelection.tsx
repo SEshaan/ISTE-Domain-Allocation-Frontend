@@ -7,6 +7,7 @@ import {
   applyDomains
 } from '../../features/domainSlice';
 import { useNavigate } from 'react-router-dom';
+import BackButton from '../../components/BackButton';
 import Header from '../../components/header';
 import Loader from '../../components/loader';
 import Popup from '../../components/Popup';
@@ -94,8 +95,10 @@ export default function DomainSelection() {
     <div className="min-h-screen bg-black text-zinc-100">
       {status === 'loading' && <Loader />}
       <Header title='Domains' theme='dark'/>
-      <div className="max-w-6xl mx-auto space-y-12">
+      <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
 
+        <BackButton to="/dashboard" text="Dashboard" onClick={() => dispatch(resetDraft())} />
+        
         {/* SELECTED DOMAINS */}
         <div className="flex flex-col items-center justify-center ">
           <h2 className="text-5xl font-bold mb-16 tracking-wide">
@@ -122,16 +125,6 @@ export default function DomainSelection() {
               }`}
           >
             Confirm & Save
-          </button>
-
-          <button
-            onClick={() => {
-              dispatch(resetDraft());
-              navigate(-1);
-            }}
-            className="text-zinc-400 hover:text-white"
-          >
-            Cancel
           </button>
 
         </div>

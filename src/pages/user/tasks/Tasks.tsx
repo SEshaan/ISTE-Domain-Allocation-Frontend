@@ -167,14 +167,26 @@ export default function Tasks() {
         >
           Retry
         </button>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
 
   if (!loading && tasks.length === 0) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center flex-col gap-4">
         <p>No tasks found for this domain.</p>
+        <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-2 bg-gray-700 text-white rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          Back
+        </button>
       </div>
     );
   }
@@ -255,6 +267,16 @@ export default function Tasks() {
           {/* Footer */}
           <div className="mt-10 pt-8 border-t border-zinc-900 flex items-center justify-between">
             <button
+          onClick={() => navigate('/questionsandtasks')}
+          className="px-6 py-3 rounded-lg font-medium transition-colors text-zinc-400 hover:text-white hover:bg-zinc-900"
+        >
+          Back
+        </button>
+
+            <div className="flex items-center gap-4">
+              
+              
+              <button
               onClick={handlePrev}
               disabled={currentTaskIndex === 0}
               className={`px-6 py-3 rounded-lg font-medium transition-colors ${
@@ -266,8 +288,7 @@ export default function Tasks() {
               Previous
             </button>
 
-            <div className="flex items-center gap-4">
-              <button
+            <button
                 onClick={handleSubmit}
                 className="px-8 py-3 rounded-lg font-bold text-black shadow-lg hover:brightness-110 active:scale-95 transition-all transform"
                 style={{ backgroundColor: domain.color, color: textColor }}
