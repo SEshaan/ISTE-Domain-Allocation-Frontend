@@ -52,7 +52,7 @@ export default function AdminResponses() {
     return (
         <div className="mt-6 bg-white shadow-md rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Questionnaire Responses</h2>
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-96 overflow-y-auto">
                 {responses.length > 0 ? (
                     responses.map((response) => (
                         <details key={response._id} className="group border border-gray-200 rounded-md">

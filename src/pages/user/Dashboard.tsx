@@ -41,10 +41,12 @@ export default function Dashboard() {
         navigate(path);
     }
 
+    const { token } = useAppSelector(state => state.auth);
     const handleInterviewClick = async () => {
         setShowInterviewPopup(true);
         try {
-            const res = await api.get('/interview');
+            const headers = token ? { Authorization: `Bearer ${token}` } : undefined;
+            const res = await api.get('/user/interview', { headers });
             if (res.data.data && res.data.data.length > 0) {
                 setInterview(res.data.data[0]);
             }
@@ -111,7 +113,7 @@ export default function Dashboard() {
                     <BigTile
                         title="INTERVIEW"
                         subtitle="View your scheduled interview details"
-                        status={interviewScheduled ? "available" : "locked"}
+                        status={interviewScheduled ? "available" : "available"}
                         onClick={handleInterviewClick}
                     />
                 </div>
@@ -135,14 +137,14 @@ export default function Dashboard() {
                                 <div className="space-y-4 text-lg text-zinc-300">
                                     <div className="flex flex-col md:flex-row justify-between p-4 bg-black/40 rounded-xl border border-zinc-800">
                                         <span className="text-zinc-500 font-bold uppercase text-sm tracking-wider">Date & Time</span>
-                                        <span className="font-mono text-white">
+                                        <span className="font-bold text-white">
                                             {new Date(interview.datetime).toLocaleString([], { dateStyle: 'full', timeStyle: 'short' })}
                                         </span>
                                     </div>
                                     
                                     <div className="flex flex-col md:flex-row justify-between p-4 bg-black/40 rounded-xl border border-zinc-800">
                                         <span className="text-zinc-500 font-bold uppercase text-sm tracking-wider">Duration</span>
-                                        <span className="font-mono text-white">{interview.durationMinutes} Minutes</span>
+                                        <span className="font-bold text-white">{interview.durationMinutes} Minutes</span>
                                     </div>
 
                                     {interview.domainId && (

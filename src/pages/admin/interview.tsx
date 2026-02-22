@@ -140,35 +140,37 @@ export default function AdminInterviews() {
             </button>
           </div>
 
-          {interviews.length === 0 && (
-            <div>No interviews found.</div>
-          )}
+          <div className="max-h-96 overflow-y-auto">
+            {interviews.length === 0 && (
+              <div>No interviews found.</div>
+            )}
 
-          {interviews.map((i) => (
-            <div key={i._id} className="border p-3 mb-3 rounded text-sm">
-              <div><b>ID:</b> {i._id}</div>
-              <div><b>User:</b> {i.userId?.email || i.userId?._id || i.userId}</div>
-              <div><b>Domain:</b> {i.domainId?.name || i.domainId?._id || i.domainId}</div>
-              <div><b>Date:</b> {new Date(i.datetime).toLocaleString()}</div>
-              <div><b>Duration:</b> {i.durationMinutes} min</div>
-              <div><b>Meet:</b> {i.meetLink}</div>
+            {interviews.map((i) => (
+              <div key={i._id} className="border p-3 mb-3 rounded text-sm">
+                <div><b>ID:</b> {i._id}</div>
+                <div><b>User:</b> {i.userId?.email || i.userId?._id || i.userId}</div>
+                <div><b>Domain:</b> {i.domainId?.name || i.domainId?._id || i.domainId}</div>
+                <div><b>Date:</b> {new Date(i.datetime).toLocaleString()}</div>
+                <div><b>Duration:</b> {i.durationMinutes} min</div>
+                <div><b>Meet:</b> {i.meetLink}</div>
 
-              <div className="flex gap-2 mt-2">
-                <button
-                  onClick={() => setSelectedId(i._id)}
-                  className="px-3 py-1 bg-yellow-400 rounded"
-                >
-                  Select
-                </button>
-                <button
-                  onClick={() => cancelInterview(i._id)}
-                  className="px-3 py-1 bg-red-600 text-white rounded"
-                >
-                  Cancel
-                </button>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => setSelectedId(i._id)}
+                    className="px-3 py-1 bg-yellow-400 rounded"
+                  >
+                    Select
+                  </button>
+                  <button
+                    onClick={() => cancelInterview(i._id)}
+                    className="px-3 py-1 bg-red-600 text-white rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* ================= SELECT ================= */}

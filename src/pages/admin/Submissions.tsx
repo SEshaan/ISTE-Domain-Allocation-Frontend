@@ -38,7 +38,7 @@ export default function AdminSubmissions() {
     return (
         <div className="mt-6 bg-white shadow-md rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Task Submissions</h2>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b">

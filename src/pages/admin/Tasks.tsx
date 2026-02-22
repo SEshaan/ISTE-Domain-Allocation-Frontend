@@ -123,7 +123,7 @@ export default function AdminTasks() {
                 <h2 className="text-2xl font-bold">Tasks</h2>
                 <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800" onClick={openAdd}>Add Task</button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b">

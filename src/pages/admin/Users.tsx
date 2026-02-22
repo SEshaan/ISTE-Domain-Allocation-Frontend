@@ -124,7 +124,7 @@ export default function AdminUsers() {
         )}
 
         {/* User Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
           {loading ? (
             <div className="p-6 text-center text-gray-500">Loading users...</div>
           ) : (

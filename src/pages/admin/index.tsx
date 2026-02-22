@@ -101,7 +101,7 @@ export default function AdminDomains() {
               Refresh
             </button>
           </div>
-          <ul className="divide-y divide-gray-200 bg-gray-50 rounded">
+          <ul className="divide-y divide-gray-200 bg-gray-50 rounded max-h-96 overflow-y-auto">
             {domains.length === 0 && (
               <li className="py-4 text-center text-gray-400">No domains found.</li>
             )}
