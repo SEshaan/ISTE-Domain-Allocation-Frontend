@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
             </div>
             <div>
               <p className="text-2xl font-medium mb-2">iste@vit.ac.in</p>
-              <p className="text-xl ">+91 83289 26213</p>
+              <p className="text-xl ">+91 63623 67135</p>
             </div>
           </div>
           <div className="flex gap-6">

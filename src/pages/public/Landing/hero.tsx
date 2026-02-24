@@ -146,7 +146,7 @@ export default function Hero() {
         visible={popupVisible}
         theme="warning"
         title="Not Enrolled"
-        message="You are not enrolled for this chapter. Please reach out to us at <email> if this is a mistake."
+        message="You are not enrolled for this chapter. Please reach out to us at iste@vit.ac.in if this is a mistake."
         onClose={() => setPopupVisible(false)}
       />
     </div>
