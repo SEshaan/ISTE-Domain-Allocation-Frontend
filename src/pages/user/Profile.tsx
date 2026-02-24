@@ -12,11 +12,11 @@ import { getReadableTextColor } from '../../utils/color';
 const GITHUB_REGEX =
   /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_-]+\/?$/;
 
-const LEETCODE_REGEX =
-  /^https?:\/\/(www\.)?leetcode\.com\/u\/[A-Za-z0-9_-]+\/?$/;
+// const LEETCODE_REGEX =
+//   /^https?:\/\/(www\.)?leetcode\.com\/u\/[A-Za-z0-9_-]+\/?$/;
 
 const isValidGithub = (url: string) => GITHUB_REGEX.test(url);
-const isValidLeetcode = (url: string) => LEETCODE_REGEX.test(url);
+// const isValidLeetcode = (url: string) => LEETCODE_REGEX.test(url);
 
 // const extractUsername = (url: string) =>
 //   url.split('/').filter(Boolean).pop();
