@@ -303,7 +303,7 @@ questionnaireId: questionnaire._id,
                 <p className='mb-4' key={idx}>
                   <ReactMarkdown
                 components={{
-                  br: ({node, ...props}) => <br {...props} />,
+                  br: ({node, ...props}) => <br className="mb-8" {...props} />,
                   p: ({node, ...props}) => <span {...props} />,
                   strong: ({node, ...props}) => <strong {...props} />, // preserve bold
                   code: ({node, ...props}) => <code className="bg-zinc-800 text-zinc-200 px-1 py-0.5 rounded" {...props} />, // preserve inline code
@@ -311,6 +311,7 @@ questionnaireId: questionnaire._id,
                   h2: ({node, ...props}) => <h2 className='text-3xl md:text-5xl font-bold mb-3' {...props} />, // preserve heading 2
                   h3: ({node, ...props}) => <h3 className='text-2xl md:text-4xl font-bold mb-2' {...props} />, // preserve heading 3
                   em: ({node, ...props}) => <em {...props} />, // preserve italics
+                  hr: ({node, ...props}) => <hr className="my-8 border-zinc-700" {...props} />, // preserve horizontal rules
                 }}
                 skipHtml={false}
               >
