@@ -180,7 +180,7 @@ export default function Tasks() {
   if (!loading && tasks.length === 0) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center flex-col gap-4">
-        <p>No tasks found for this domain.</p>
+        <p>Tasks Will Be Available After Interview</p>
         <button
           onClick={() => navigate('/questionsandtasks')}
           className="px-6 py-2 bg-gray-700 text-white rounded-lg font-bold hover:scale-105 transition-transform"
