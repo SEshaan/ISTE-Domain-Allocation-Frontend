@@ -14,8 +14,8 @@ interface Submission {
         _id: string;
         title: string;
     };
-    githubLink: string;
-    liveLink?: string;
+    repoLink: string;
+    dockLink?: string;
     submittedAt: string;
 }
 
@@ -58,11 +58,11 @@ export default function AdminSubmissions() {
                                     <td className="p-3">{submission.taskId ? submission.taskId.title : <span className="text-gray-400 italic">Unknown</span>}</td>
                                     <td className="p-3">{new Date(submission.submittedAt).toLocaleString()}</td>
                                     <td className="p-3">
-                                        <a href={submission.githubLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mr-3">
+                                        <a href={submission.repoLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mr-3">
                                             GitHub
                                         </a>
-                                        {submission.liveLink && (
-                                            <a href={submission.liveLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                        {submission.dockLink && (
+                                            <a href={submission.dockLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                                 Live
                                             </a>
                                         )}
