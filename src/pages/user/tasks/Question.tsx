@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { getquestionnaireByDomain, getResponse, submitResponse, updateResponse } from '../../../features/questionSlice';
@@ -297,9 +298,27 @@ questionnaireId: questionnaire._id,
               </div>
             </div>
 
-            <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight">
-              {currentQuestion.question}
-            </h2>
+            <div className="prose prose-invert max-w-none text-2xl md:text-3xl text-white leading-tight text-left">
+              {currentQuestion.question.split('\n').map((line, idx) => (
+                <p className='mb-4' key={idx}>
+                  <ReactMarkdown
+                components={{
+                  br: ({node, ...props}) => <br {...props} />,
+                  p: ({node, ...props}) => <span {...props} />,
+                  strong: ({node, ...props}) => <strong {...props} />, // preserve bold
+                  code: ({node, ...props}) => <code className="bg-zinc-800 text-zinc-200 px-1 py-0.5 rounded" {...props} />, // preserve inline code
+                  h1: ({node, ...props}) => <h1 className='text-4xl md:text-6xl font-bold mb-4' {...props} />, // preserve heading 1
+                  h2: ({node, ...props}) => <h2 className='text-3xl md:text-5xl font-bold mb-3' {...props} />, // preserve heading 2
+                  h3: ({node, ...props}) => <h3 className='text-2xl md:text-4xl font-bold mb-2' {...props} />, // preserve heading 3
+                  em: ({node, ...props}) => <em {...props} />, // preserve italics
+                }}
+                skipHtml={false}
+              >
+                {line}
+              </ReactMarkdown>
+                </p>
+              ))}
+            </div>
           </div>
 
           {/* Content */}
