@@ -113,7 +113,7 @@ export default function Dashboard() {
                     <BigTile
                         title="INTERVIEW"
                         subtitle="View your scheduled interview details"
-                        status={interviewScheduled ? "available" : "available"}
+                        status={interviewScheduled ? "available" : "locked"}
                         onClick={handleInterviewClick}
                     />
                 </div>
