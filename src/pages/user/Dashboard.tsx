@@ -25,8 +25,7 @@ export default function Dashboard() {
         user?.email && user.email.trim() &&
         user?.regNo && user.regNo.trim() &&
         user?.branch && user.branch.trim() &&
-        user?.githubLink && user.githubLink.trim() &&
-        user?.leetcodeLink && user.leetcodeLink.trim()
+        user?.githubLink && user.githubLink.trim()
     );
 
     // Check if exactly 2 domains are selected

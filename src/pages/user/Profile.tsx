@@ -91,7 +91,7 @@ function Profile() {
     regNo: '',
     branch: '',
     githubLink: '',
-    leetcodeLink: '',
+    // leetcodeLink: '',
     portfolioLink: '',
     selectedDomainIds: [] as string[],
   })
@@ -113,7 +113,7 @@ function Profile() {
         regNo: user.regNo,
         branch: user.branch,
         githubLink: user.githubLink,
-        leetcodeLink: user.leetcodeLink,
+        // leetcodeLink: user.leetcodeLink,
         portfolioLink: user.portfolioLink || '',
         selectedDomainIds: user.selectedDomainIds,
       })
@@ -134,11 +134,11 @@ function Profile() {
     if (!form.regNo || !form.regNo.trim()) mark('regNo', 'Registration No');
     if (!form.branch || !form.branch.trim()) mark('branch', 'Branch');
     if (!form.githubLink || !form.githubLink.trim()) mark('githubLink', 'GitHub Profile');
-    if (!form.leetcodeLink || !form.leetcodeLink.trim()) mark('leetcodeLink', 'LeetCode Profile');
+    // if (!form.leetcodeLink || !form.leetcodeLink.trim()) mark('leetcodeLink', 'LeetCode Profile');
 
     // validate URL formats (mark the field key so it highlights)
     if (form.githubLink && !isValidGithub(form.githubLink)) mark('githubLink', 'Valid GitHub URL');
-    if (form.leetcodeLink && !isValidLeetcode(form.leetcodeLink)) mark('leetcodeLink', 'Valid LeetCode URL');
+    // if (form.leetcodeLink && !isValidLeetcode(form.leetcodeLink)) mark('leetcodeLink', 'Valid LeetCode URL');
 
     if (missingKeys.length > 0) {
       setMissingFields(missingKeys);
@@ -234,7 +234,7 @@ function Profile() {
                   }
                 />
               </div>
-              <div>
+              {/* <div>
                 <h1 className='text-xl text-left mb-4'>Leetcode Profile</h1>
                 <input
                   className={`w-full px-4 py-4 rounded-lg bg-zinc-900 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white ${
@@ -249,7 +249,7 @@ function Profile() {
                     }
                   }
                 />
-              </div>
+              </div> */}
               {/* <div>
                 <h1 className='text-xl text-left mb-4'>Portfolio Website</h1>
                 <input
