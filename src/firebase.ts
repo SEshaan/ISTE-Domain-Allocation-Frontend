@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCJLazpi_0rKVF_x8bp60UjG2sM9xU6klo",
-  authDomain: "iste-domain-allocation.firebaseapp.com",
+  authDomain: "domain-allocation.istevit.in",
   projectId: "iste-domain-allocation",
   storageBucket: "iste-domain-allocation.firebasestorage.app",
   messagingSenderId: "441750940331",

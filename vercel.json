@@ -3,6 +3,10 @@
     {
       "source": "/(.*)",
       "destination": "/index.html"
+    },
+     {
+      "source": "/__/auth/:path*",
+      "destination": "https://iste-domain-allocation.firebaseapp.com/__/auth/:path*"
     }
   ]
 }
