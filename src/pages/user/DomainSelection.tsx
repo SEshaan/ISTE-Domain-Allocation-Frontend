@@ -100,17 +100,22 @@ export default function DomainSelection() {
         <BackButton to="/dashboard" text="Dashboard" onClick={() => dispatch(resetDraft())} />
         
         {/* SELECTED DOMAINS */}
-        <div className="flex flex-col items-center justify-center ">
-          <h2 className="text-5xl font-bold mb-16 tracking-wide">
-            Selected Domains
-          </h2>
+        <div className="flex flex-col items-center justify-center w-full">
+      <h2 className="text-3xl md:text-5xl font-bold mb-10 md:mb-16 tracking-wide text-center">
+        Selected Domains
+      </h2>
 
-          <div className="flex flex-row items-center gap-12 justify-center md:flex-row">
-            {renderSlot(draftDomains[0])}
-            <span className="text-7xl font-thin text-zinc-500">+</span>
-            {renderSlot(draftDomains[1])}
-          </div>
-        </div>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 w-full">
+        {renderSlot(draftDomains[0])}
+
+        <span className="text-4xl md:text-7xl font-thin text-zinc-500 rotate-90 md:rotate-0">
+          +
+        </span>
+
+        {renderSlot(draftDomains[1])}
+      </div>
+    </div>
+
 
         {/* ACTIONS */}
         <div className="flex flex-col justify-center items-center pt-6 gap-8">
@@ -158,7 +163,7 @@ export default function DomainSelection() {
                         : 'bg-zinc-900 border-zinc-700 hover:border-white'
                     }`}
                 >
-                  <div className="flex h-full items-center justify-center text-2xl font-regular">
+                  <div className="flex h-full items-center justify-center text-xl md:text-2xl font-regular">
                     {domain.name}
                   </div>
 
