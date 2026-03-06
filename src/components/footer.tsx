@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaYoutube, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaYoutube, FaLinkedin, FaInstagram, FaGithub } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer: React.FC = () => {
   return (
@@ -28,6 +29,13 @@ const Footer: React.FC = () => {
             <a href="https://www.instagram.com/iste_vit_vellore/" target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-blue-600 transition-colors">
               <FaInstagram />
             </a>
+            <a href="https://github.com/ISTE-VIT" target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-blue-600 transition-colors">
+              <FaGithub />
+            </a>
+            <a href="https://x.com/iste_vitvellore" target="_blank" rel="noopener noreferrer" className="text-2xl hover:text-blue-600 transition-colors">
+              <FaXTwitter />
+            </a>
+            
           </div>
         </div>
 
