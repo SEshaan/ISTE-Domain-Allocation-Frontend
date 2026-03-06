@@ -30,6 +30,7 @@ interface EditState {
 
 export default function AdminQuestionnaire() {
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
+  questionnaires
   const [domainId, setDomainId] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [mcqQuestions, setMcqQuestions] = useState<McqQuestion[]>([]);
@@ -129,6 +130,10 @@ export default function AdminQuestionnaire() {
     setTextQuestions(copy);
   };
 
+  addTextQuestion
+  removeTextQuestion
+  updateTextQuestion
+
   /* ================= CREATE SUBMIT ================= */
 
   const addQuestionnaire = async () => {
@@ -190,6 +195,8 @@ export default function AdminQuestionnaire() {
     });
   };
 
+  openEdit
+
   const closeEdit = () => {
     setEditState({ open: false, questionnaire: null, dueDate: "", loading: false });
     setEditMcqs([]);
@@ -220,6 +227,9 @@ export default function AdminQuestionnaire() {
       })
     );
   };
+
+  handleEditCorrectOption
+  handleEditRemoveOption
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,6 +265,8 @@ export default function AdminQuestionnaire() {
       setEditState((prev) => ({ ...prev, loading: false }));
     }
   };
+
+  handleEditSubmit
 
   /* ================= UI ================= */
 
