@@ -101,11 +101,11 @@ export default function DomainSelection() {
         
         {/* SELECTED DOMAINS */}
         <div className="flex flex-col items-center justify-center w-full">
-      <h2 className="text-3xl md:text-5xl font-bold mb-10 md:mb-16 tracking-wide text-center">
+      <h2 className="text-4xl md:text-5xl font-bold mb-10 md:mb-16 tracking-wide text-center">
         Selected Domains
       </h2>
 
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 w-full">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 w-full">
         {renderSlot(draftDomains[0])}
 
         <span className="text-4xl md:text-7xl font-thin text-zinc-500 rotate-90 md:rotate-0">
@@ -118,7 +118,7 @@ export default function DomainSelection() {
 
 
         {/* ACTIONS */}
-        <div className="flex flex-col justify-center items-center pt-6 gap-8">
+        <div className="flex flex-col justify-center items-center pt-4 md:pt-6">
           <button
             disabled={!hasChanges}
             onClick={() => setConfirmPopupVisible(true)}
@@ -136,7 +136,7 @@ export default function DomainSelection() {
 
         {/* ALL DOMAINS */}
         <div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-16">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 p-4 md:p-16">
             {domainList.map(domain => {
               const active = draftDomains.some(d => d._id === domain._id);
               const disabled = !active && draftDomains.length >= 2;
