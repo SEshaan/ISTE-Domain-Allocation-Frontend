@@ -12,8 +12,8 @@ export default function Header({ title, theme = "light"} : { title: string, them
           "
             style={{ backgroundImage: { light: "url('/divider_black.png')", dark: "url('/divider_beige.png')" }[theme] }}
         >
-            <div className="absolute bottom-[-10%] md:bottom-[-25%] w-full text-center">
-                <Title className="text-[10vh] md:text-[25vh] relative">
+            <div className="absolute bottom-[10%] md:bottom-[-25%] w-full text-center">
+                <Title className="text-7xl md:text-[25vh] relative">
                     {title}
                 </Title>
             </div>

@@ -80,7 +80,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* GRID */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
 
                     <BigTile
                         title="PROFILE"
@@ -204,7 +204,7 @@ function BigTile({ title, subtitle, status, onClick }: BigTileProps) {
             disabled={isLocked}
             onClick={onClick}
             className={`
-                relative w-full min-h-[180px] md:min-h-[260px]
+                relative w-full gap-8 md:min-h-[280px]
                 border-2 rounded-xl p-6 text-left transition
                 flex flex-col justify-between
                 ${isLocked && "border-neutral-700 bg-black opacity-40 cursor-not-allowed"}
