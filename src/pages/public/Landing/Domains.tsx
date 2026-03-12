@@ -9,7 +9,7 @@ function DomainSelection() {
     { id: 'ML', name: 'Machine Learning', img: '/Domains/ML.png' },
     { id: 'DS', name: 'Design', img: '/Domains/DS.png' },
     { id: 'MG', name: 'Motion Graphics', img: '/Domains/MG.png' },
-    // { id: 'XR', name: 'GameDev / XR', img: '/Domains/XR.png' },
+    { id: 'XR', name: 'GameDev / XR', img: '/Domains/XR.png' },
     { id: 'EL', name: 'Electrical', img: '/Domains/EL.png' },
     { id: 'CP', name: 'Competitive Programming', img: '/Domains/CP.png' },
     { id: 'MT', name: 'Management', img: '/Domains/MT.png' },
